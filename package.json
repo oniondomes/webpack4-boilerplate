@@ -5,8 +5,8 @@
   "author": "(https://github.com/oniondomes)",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack-dev-server --mode=development --config build/webpack.config.dev",
-    "build": "webpack --mode=production --config build/webpack.config.prod"
+    "dev": "webpack-dev-server --mode development --config build/webpack.config",
+    "build": "webpack --mode production --config build/webpack.config"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
