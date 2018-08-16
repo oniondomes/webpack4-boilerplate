@@ -2,41 +2,37 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const cssNano = require('cssnano');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const resolve = (...dir) => path.join(__dirname, '..', ...dir);
 
 const envOptions = {
   production: {
     plugins: [
-      new ExtractTextPlugin({
-        filename: 'main.css',
-      }),
       new OptimizeCssAssetsPlugin({
         cssProcessor: cssNano,
-        cssProcessorOptions: { discardComments: { removeAll: true } },
         canPrint: true,
-        disable: true,
       }),
-      new CleanWebpackPlugin(['dist']),
+      new MiniCssExtractPlugin({
+        filename: 'main.css',
+      }),
+      new CleanWebpackPlugin(['dist'], {
+        root: resolve(),
+        verbose: true,
+      }),
     ],
   },
   development: {
     devServer: {
-      contentBase: resolve('dist'),
+      contentBase: resolve('src'),
       hot: true,
     },
     devtool: 'eval-source-map',
-    plugins: [
-      new webpack.HotModuleReplacementPlugin(),
-      new ExtractTextPlugin({
-        disable: true,
-      }),
-    ],
+    plugins: [new webpack.HotModuleReplacementPlugin()],
   },
 };
 
@@ -58,17 +54,7 @@ const baseConfig = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: resolve('src'),
-      },
-      {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader',
-        }),
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
+        exclude: /node_modules/,
       },
     ],
   },
@@ -79,4 +65,16 @@ const baseConfig = {
   ],
 };
 
-module.exports = (env, argv) => merge(baseConfig, envOptions[argv.mode]);
+module.exports = (env, argv) => {
+  baseConfig.module.rules.push({
+    test: /\.scss$/,
+    use: [
+      argv.mode !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+      'css-loader',
+      'postcss-loader',
+      'sass-loader',
+    ],
+  });
+
+  return merge(baseConfig, envOptions[argv.mode]);
+};
