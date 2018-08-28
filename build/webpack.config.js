@@ -37,7 +37,7 @@ const envOptions = {
 };
 
 const baseConfig = {
-  entry: resolve('src', 'index.js'),
+  entry: ['@babel/polyfill', resolve('src', 'index.js')],
   output: {
     path: resolve('dist'),
     filename: 'app.js',
