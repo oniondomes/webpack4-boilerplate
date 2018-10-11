@@ -66,13 +66,31 @@ const baseConfig = {
 };
 
 module.exports = (env, argv) => {
+  const scssLoaders = [
+    argv.mode !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+    'css-loader',
+  ];
+
+  if (argv.mode !== 'production') {
+    scssLoaders.push('postcss-loader');
+  }
+
+  scssLoaders.push('sass-loader');
+
   baseConfig.module.rules.push({
     test: /\.scss$/,
+    use: scssLoaders,
+  });
+
+  baseConfig.module.rules.push({
+    test: /\.(png|jpg|gif|svg)$/,
     use: [
-      argv.mode !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-      'css-loader',
-      'postcss-loader',
-      'sass-loader',
+      {
+        loader: 'file-loader',
+        options: {
+          useRelativePath: argv.mode === 'production',
+        },
+      },
     ],
   });
 

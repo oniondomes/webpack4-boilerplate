@@ -5,6 +5,6 @@ module.exports = {
   rules: {
     'no-console': 1,
     'require-jsdoc': 0,
-    'objyarect-curly-spacing': 0,
+    'object-curly-spacing': 0,
   },
 };
