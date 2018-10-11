@@ -1,13 +1,14 @@
 {
   "name": "webpack-boilerplate",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "index.js",
   "author": "(https://github.com/oniondomes)",
   "license": "MIT",
   "browserslist": "> 0.25%",
   "scripts": {
     "dev": "webpack-dev-server --mode development --config build/webpack.config",
-    "build": "webpack --mode production --config build/webpack.config"
+    "build": "webpack --mode production --config build/webpack.config",
+    "eslint": "eslint src/"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
