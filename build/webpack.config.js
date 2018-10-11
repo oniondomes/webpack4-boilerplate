@@ -82,5 +82,17 @@ module.exports = (env, argv) => {
     use: scssLoaders,
   });
 
+  baseConfig.module.rules.push({
+    test: /\.(png|jpg|gif|svg)$/,
+    use: [
+      {
+        loader: 'file-loader',
+        options: {
+          useRelativePath: argv.mode === 'production',
+        },
+      },
+    ],
+  });
+
   return merge(baseConfig, envOptions[argv.mode]);
 };
